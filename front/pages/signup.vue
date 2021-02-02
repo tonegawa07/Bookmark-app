@@ -50,7 +50,8 @@
 </template>
    
 <script>
-import firebase from "../plugins/firebase";
+import firebase from "@/plugins/firebase";
+import axios from "@/plugins/axios";
 import TextField from '../components/atoms/TextField.vue'
 export default {
 
@@ -78,7 +79,14 @@ export default {
         .auth()
         .createUserWithEmailAndPassword(this.email, this.password)
         .then(res => {
-          console.log(res.user);
+          const user = {
+            email: res.user.email,
+            name: this.name,
+            uid: res.user.uid
+          };
+          axios.post("/v1/users", { user }).then(() => {
+            this.$router.push("/");
+          });
         })
         .catch(error => {
           this.error = (code => {
@@ -96,7 +104,7 @@ export default {
       });
     }
   },
-  
+
 }
 </script>
    
