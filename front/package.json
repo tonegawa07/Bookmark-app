@@ -9,8 +9,11 @@
     "generate": "nuxt generate"
   },
   "dependencies": {
+    "@nuxtjs/dotenv": "^1.4.1",
     "core-js": "^3.8.3",
-    "nuxt": "^2.14.12"
+    "firebase": "^8.2.5",
+    "nuxt": "^2.14.12",
+    "vee-validate": "^3.4.5"
   },
   "devDependencies": {
     "@nuxtjs/vuetify": "^1.11.3"

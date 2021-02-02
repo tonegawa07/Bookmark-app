@@ -7,7 +7,7 @@
  >
     <v-toolbar-title>
     <n-link to="/" style="color:white; text-decoration:none;">
-       <h1 class="app-title">MyContents!</h1>
+       <h1 class="app-title">Bookmark App</h1>
      </n-link>
     </v-toolbar-title>
   </v-app-bar>
