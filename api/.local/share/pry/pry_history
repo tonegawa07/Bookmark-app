@@ -1,1 +1,3 @@
 User.first
+User.all
+User.first
