@@ -2,7 +2,7 @@
   <ValidationObserver>
     <v-card class="mx-auto mt-5 pa-5" width="400px">
       <v-card-title>
-        <h1 class="signup-title">新規登録</h1>
+        <h2 class="signup-title">ユーザー編集</h2>
       </v-card-title>
       <v-card-text>
         <v-form>
@@ -38,11 +38,10 @@
             <v-btn
               color="light-blue lighten-3"
               class="mx-auto white--text mt-4"
-              @click="signup"
-            >新規登録
+            >変更
             </v-btn>
           </v-row>
-          
+          <p v-if="error" class="errors">{{error}}</p>
         </v-form>
       </v-card-text>
     </v-card>
@@ -53,11 +52,13 @@
 import firebase from "@/plugins/firebase";
 import axios from "@/plugins/axios";
 import TextField from '~/components/atoms/TextField.vue'
+
 export default {
 
   components: {
     TextField
   },
+
   data() {
     return {
       email: '',
@@ -67,57 +68,28 @@ export default {
       show1: false,
       show2: false,
       error: ''
-    };
-  },
-
-  methods: {
-    signup() {
-      if (this.password !== this.passwordConfirm) {
-        this.error = "※ パスワードとパスワード確認が一致していません";
-      }
-      this.$store.commit("setLoading", true);
-      firebase
-        .auth()
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then(res => {
-          const user = {
-            email: res.user.email,
-            name: this.name,
-            uid: res.user.uid
-          };
-          axios.post("/v1/users", { user }).then((res) => {
-            this.$store.commit("setLoading", false);
-            this.$store.commit("setUser", res.data);
-            this.$store.commit("setFlash", {
-              status: true,
-              message: "ログインしました"
-            });
-            setTimeout(() => {
-              this.$store.commit("setFlash", {});
-            }, 2000);
-            this.$router.push("/");
-          })
-        })
-        .catch(error => {
-          this.error = (code => {
-            switch (code) {
-              case "auth/email-already-in-use":
-                return "既にそのメールアドレスは使われています";
-              case "auth/wrong-password":
-                return "※ パスワードが正しくありません";
-              case "auth/weak-password":
-                return "※ パスワードは最低6文字以上にしてください";
-              default:
-                return "※ メールアドレスとパスワードをご確認ください";
-            }
-          })(error.code);
-          this.$store.commit("setLoading", false)
-      });
     }
   },
-  fetch ({ redirect, store }) {
-    if (store.state.currentUser) {
-      return redirect('/')
+
+  computed: {
+    currentUser () {
+      return this.$store.state.currentUser
+    }
+  },
+
+  mounted() {
+    const setDafaultData = () => {
+      axios
+      .get(`v1/users/${this.currentUser.id}/edit`)
+      .then((res) => {
+        this.email = res.data.email
+        this.name = res.data.name
+      })
+    }
+    if (this.currentUser.id) {
+      setDafaultData()
+    } else {
+      setTimeout(setDafaultData, 1000)
     }
   },
 
