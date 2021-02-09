@@ -22,7 +22,7 @@
                 <v-btn
                   color="light-blue lighten-3"
                   class="white--text"
-                  @click="openDialog"
+                  @click="openDialogForEmail"
                 >変更
                 </v-btn>
               </v-row>
@@ -31,7 +31,7 @@
               <div class="password-box">
                 <TextField
                     v-model="password"
-                    label="変更後のパスワード"
+                    label="パスワード"
                     rules="required|min:6"
                     :type="show1 ? 'text' : 'password'"
                     :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -40,7 +40,7 @@
                 />
                 <TextField
                     v-model="passwordConfirm"
-                    label="変更後のパスワード(再入力)"
+                    label="パスワード(再入力)"
                     rules="required|min:6|confirmed:パスワード"
                     :type="show2 ? 'text' : 'password'"
                     :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -50,6 +50,8 @@
                   <v-btn
                     color="light-blue lighten-3"
                     class="white--text"
+                    @click="openDialogForPassword"
+
                   >変更
                   </v-btn>
                 </v-row>
@@ -84,7 +86,9 @@ export default {
       show1: false,
       show2: false,
       error: '',
-      dialog: false
+      dialog: false,
+      isEmail: false,
+      isPassword: false
     }
   },
 
@@ -112,7 +116,13 @@ export default {
 
   methods: {
     loginSuccess () {
-      this.changeUserEmail()
+      if (this.isEmail) {
+        this.isEmail = false
+        this.changeUserEmail()
+      } else if (this.isPassword) {
+        this.isPassword = false
+        this.changeUserPassword()
+      }
     },
     changeUserEmail () {
       const user = firebase.auth().currentUser
@@ -136,7 +146,7 @@ export default {
         })
       })
       .catch(error => {
-        this,error = ( code => {
+        this.error = ( code => {
           switch (code) {
             case "auth/email-already-in-use":
               return "既にそのメールアドレスは使われています";
@@ -151,11 +161,46 @@ export default {
         this.$store.commit("setLoading", false)
       });
     },
+    changeUserPassword () {
+      const user = firebase.auth().currentUser
+      this.$store.commit("setLoading", true);
 
-    openDialog () {
+      user.updatePassword(this.password).then(() => {
+        this.$store.commit("setLoading", false);
+        this.$store.commit("setFlash", {
+            status: true,
+            message: "パスワードを変更しました"
+        });
+        this.password = ''
+        this.passwordConfirm = ''
+        setTimeout(() => {
+          this.$store.commit("setFlash", {});
+        }, 2000);
+      }).catch(error => {
+        this.$store.commit('setLoading', false)
+      });
+    },
+    openDialogForEmail () {
+      this.isEmail = true
+      this.dialog = true
+    },
+    openDialogForPassword () {
+      this.isPassword = true
       this.dialog = true
     }
   },
+
+    fetch ({ redirect, store }) {
+      store.watch(
+        state => state.currentUser,
+        (newuser, olduser) => {
+          if (!newuser) {
+            return redirect('/login')
+          }
+        }
+      )
+  },
+
 
 }
 </script>

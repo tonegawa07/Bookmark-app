@@ -12,7 +12,7 @@
         <p v-if="error" class="errors">{{error}}</p>
         <TextField
         v-model="password"
-        label="パスワード"
+        label="現在のパスワード"
         rules="required|min:6"
         :type="show1 ? 'text' : 'password'"
         :append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
@@ -69,9 +69,13 @@ export default {
       .signInWithEmailAndPassword(this.email, this.password)
       .then(() => {
         this.$emit('loginSuccess')
+        this.password = ''
+        this.error = ''
         this.$emit('closeDialog')
       })
       .catch(error => {
+        this.password = ''
+        this.error = ''
         this.error = (code => {
           switch (code) {
             case "auth/wrong-password":
