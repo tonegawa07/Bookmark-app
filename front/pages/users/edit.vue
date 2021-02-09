@@ -2,7 +2,9 @@
   <v-container>
     <LoginDialog
       :dialog="dialog"
+      :email="originEmail"
       @closeDialog="dialog = false"
+      @loginSuccess="loginSuccess"
     />
       <v-card class="mx-auto mt-5 pa-5" width="400px">
         <v-card-title>
@@ -76,12 +78,12 @@ export default {
   data() {
     return {
       email: '',
+      originEmail: '',
       password: '',
       passwordConfirm: '',
       show1: false,
       show2: false,
       error: '',
-      disabled: false,
       dialog: false
     }
   },
@@ -98,6 +100,7 @@ export default {
       .get(`v1/users/${this.currentUser.id}/edit`)
       .then((res) => {
         this.email = res.data.email
+        this.originEmail = res.data.email
       })
     }
     if (this.currentUser.id) {
@@ -108,6 +111,9 @@ export default {
   },
 
   methods: {
+    loginSuccess () {
+      this.changeUserEmail()
+    },
     changeUserEmail () {
       const user = firebase.auth().currentUser
       this.$store.commit("setLoading", true);
@@ -119,6 +125,7 @@ export default {
         })
         .then((res) => {
           this.$store.commit("setLoading", false);
+          this.originEmail = res.data.email
           this.$store.commit("setFlash", {
             status: true,
             message: "メールアドレスを変更しました"
