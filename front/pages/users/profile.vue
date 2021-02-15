@@ -132,10 +132,6 @@ export default {
 </script>
 
 <style>
-  .edit-h3 {
-    margin: 16px 0 16px 0;
-    }
-
   .profile-message-btn {
     margin-top: 16px;
     }
