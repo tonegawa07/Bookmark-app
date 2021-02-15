@@ -47,11 +47,13 @@
 <script>
 import axios from "@/plugins/axios";
 import TextField from '~/components/atoms/TextField.vue'
+import TextArea from '~/components/atoms/TextArea.vue'
 
 export default {
 
   components: {
     TextField,
+    TextArea,
   },
 
   data () {
