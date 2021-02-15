@@ -7,6 +7,7 @@
       <v-card-text>
         <v-form>
           <div class="username-box">
+            <h3 class="edit-h3">名前</h3>
             <TextField
             v-model="name"
             label="名前"
@@ -22,7 +23,20 @@
             </v-row>
           </div>
           <div class="profile-box">
-
+            <h3 class="edit-h3">プロフィール文</h3>
+            <TextArea
+            v-model="profile"
+            label="プロフィール文"
+            rules="max:140"
+            />
+            <v-row justify="end">
+              <v-btn
+              color="light-blue lighten-3"
+              class="white--text"
+              @click="changeUsersProfile"
+              >変更
+              </v-btn>
+            </v-row>
           </div>
         </v-form>
       </v-card-text>
@@ -74,6 +88,27 @@ export default {
           this.$store.commit("setFlash", {});
         }, 2000);
       })
+    },
+    changeUsersProfile () {
+      const user = {
+        profile: this.profile
+      }
+      this.$store.commit("setLoading", true);
+
+      axios
+      .patch(`v1/users/${this.currentUser.id}`, {user})
+      .then((res) => {
+        this.profile = res.data.profile
+        this.$store.commit("setUserProfile", res.data.profile)
+        this.$store.commit("setLoading", false);
+        this.$store.commit("setFlash", {
+          status: true,
+          message: "プロフィール文を変更しました"
+        });
+        setTimeout(() => {
+          this.$store.commit("setFlash", {});
+        }, 2000);
+      })
     }
   },
 
@@ -97,5 +132,11 @@ export default {
 </script>
 
 <style>
+  .edit-h3 {
+    margin: 16px 0 16px 0;
+    }
 
+  .profile-message-btn {
+    margin-top: 16px;
+    }
 </style>
