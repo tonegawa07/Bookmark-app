@@ -1,21 +1,24 @@
 <template>
-  <div class="profile-box">
-    <h3 class="edit-h3">プロフィール文</h3>
-    <TextArea
-    v-model="profile"
-    :rules="rules"
-    :label="label"
-    v-bind="$attrs"
-    />
-    <v-row justify="end">
-      <v-btn
-      color="light-blue lighten-3"
-      class="white--text profile-message-btn"
-      @click="changeUsersProfile"
-      >変更
-      </v-btn>
-    </v-row>
-  </div>
+  <ValidationObserver ref="obs" v-slot="ObserberProps">
+    <div class="profile-box">
+      <h3 class="edit-h3">プロフィール文</h3>
+      <TextArea
+      v-model="profile"
+      :rules="rules"
+      :label="label"
+      v-bind="$attrs"
+      />
+      <v-row justify="end">
+        <v-btn
+        color="light-blue lighten-3"
+        class="white--text profile-message-btn"
+        @click="changeUsersProfile"
+        :disabled="ObserberProps.invalid || !ObserberProps.validated"
+        >変更
+        </v-btn>
+      </v-row>
+    </div>
+  </ValidationObserver>
 </template>
 
 <script>
@@ -23,6 +26,10 @@ import axios from "@/plugins/axios";
 import TextArea from '~/components/atoms/TextArea.vue'
 
 export default {
+
+    components: {
+    TextArea,
+  },
   
   props: {
     rules: {

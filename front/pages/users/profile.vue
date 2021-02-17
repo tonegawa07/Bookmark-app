@@ -6,6 +6,8 @@
       </v-card-title>
       <v-card-text>
         <v-form>
+          <ChangeUsersAvater
+          />
           <ChangeUsersName
             v-model="name"
             label="名前"
@@ -26,12 +28,14 @@
 import axios from "@/plugins/axios";
 import ChangeUsersName from '~/components/organisms/users/ChangeUsersName.vue'
 import ChangeUsersProfile from '~/components/organisms/users/ChangeUsersProfile.vue'
+import ChangeUsersAvater from '~/components/organisms/users/ChangeUsersAvater.vue'
 
 export default {
 
   components: {
     ChangeUsersName,
     ChangeUsersProfile,
+    ChangeUsersAvater
   },
 
   data () {
