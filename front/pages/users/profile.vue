@@ -6,7 +6,8 @@
       </v-card-title>
       <v-card-text>
         <v-form>
-          <ChangeUsersAvater
+          <ChangeUsersAvatar
+            rules="size:300"
           />
           <ChangeUsersName
             v-model="name"
@@ -28,14 +29,14 @@
 import axios from "@/plugins/axios";
 import ChangeUsersName from '~/components/organisms/users/ChangeUsersName.vue'
 import ChangeUsersProfile from '~/components/organisms/users/ChangeUsersProfile.vue'
-import ChangeUsersAvater from '~/components/organisms/users/ChangeUsersAvater.vue'
+import ChangeUsersAvatar from '~/components/organisms/users/ChangeUsersAvatar.vue'
 
 export default {
 
   components: {
     ChangeUsersName,
     ChangeUsersProfile,
-    ChangeUsersAvater
+    ChangeUsersAvatar
   },
 
   data () {

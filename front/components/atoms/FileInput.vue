@@ -5,17 +5,43 @@
     v-slot="{errors, valid}"
   >
     <v-file-input
-      accept="image/*"
-      label="File input"
+      :label="$attrs.label"
+      v-model="inputValue"
       :error-messages="errors"
       :success="valid"
+      v-bind="$attrs"
+      v-on="$listeners"
     ></v-file-input>
   </ValidationProvider>
 </template>
 
 <script>
 export default {
-  
+  props: {
+    rules: {
+      type: [Object, String]
+    },
+    value: {
+      type: null
+    }
+  },
+
+  data () {
+    return {
+
+    }
+  },
+
+  computed: {
+    inputValue: {
+      get() {
+        return this.value;
+      },
+      set(value) {
+        this.$emit("input", value);
+      }
+    }
+  },
 }
 </script>
 
