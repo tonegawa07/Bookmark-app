@@ -30,7 +30,7 @@ export const mutations = {
         state.currentUser.profile = payload
     },
     setUserAvatarUrl (state, payload) {
-        state.currentUser.avater.url = payload
+        state.currentUser.avatar_url = payload
     },
     setLoggedIn(state, payload) {
         state.loggedIn = payload

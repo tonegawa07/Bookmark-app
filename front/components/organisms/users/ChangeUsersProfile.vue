@@ -65,6 +65,7 @@ export default {
       this.$store.commit("setLoading", true);
 
       axios
+      // patchの引数(url, data)
       .patch(`v1/users/${this.currentUser.id}`, {user})
       .then((res) => {
         this.profile = res.data.profile

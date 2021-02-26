@@ -1,3 +1,6 @@
 User.first
 User.all
 User.first
+Rails.application.credentials[:secret_key_base]
+Rails.application.credentials[:aws]
+Rails.application.credentials[:access_key_id]
