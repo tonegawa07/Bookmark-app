@@ -1,5 +1,5 @@
 class V1::UsersController < ApplicationController
-  before_action :set_user, only: %i[show edit update]
+  before_action :set_user, only: %i[show edit update destroy]
 
   def index
     if params[:uid]
@@ -24,10 +24,6 @@ class V1::UsersController < ApplicationController
     end
   end
  
-  def edit
-    render json: @user
-  end
- 
   def update
     if @user.update(user_params)
       render json: @user
@@ -38,6 +34,10 @@ class V1::UsersController < ApplicationController
     @user = User.find(params[:id])
     @user.avatar.attach(params[:avatar])
     render json: @user
+  end
+
+  def destroy
+    @user.destroy
   end
  
   private

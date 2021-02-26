@@ -61,6 +61,16 @@
             </ValidationObserver>
             <p v-if="error" class="errors">{{error}}</p>
           </v-form>
+              <div class="user-destroy-box">
+                <h3 class="edit-h3">アカウントを削除する</h3>
+                <v-row justify="center">
+                  <v-btn
+                    color="white--text red accent-3"
+                    @click="openDialogForDeleteAccount"
+                  >削除
+                  </v-btn>
+                </v-row>
+              </div>
         </v-card-text>
       </v-card>
   </v-container>
@@ -90,7 +100,8 @@ export default {
       error: '',
       dialog: false,
       isEmail: false,
-      isPassword: false
+      isPassword: false,
+      isDeleteAccount: false,
     }
   },
 
@@ -103,7 +114,7 @@ export default {
   mounted() {
     const setDafaultData = () => {
       axios
-      .get(`v1/users/${this.currentUser.id}/edit`)
+      .get(`v1/users/${this.currentUser.id}`)
       .then((res) => {
         this.email = res.data.email
         this.originEmail = res.data.email
@@ -124,9 +135,13 @@ export default {
       } else if (this.isPassword) {
         this.isPassword = false
         this.changeUserPassword()
+      } else if (this.isDeleteAccount) {
+        this.isDeleteAccount = false
+        this.destroyUser()
       }
     },
     changeUserEmail () {
+      // ログイン中ユーザーをuserに代入
       const user = firebase.auth().currentUser
       this.$store.commit("setLoading", true);
 
@@ -164,6 +179,7 @@ export default {
       });
     },
     changeUserPassword () {
+      // ログイン中ユーザーをuserに代入
       const user = firebase.auth().currentUser
       this.$store.commit("setLoading", true);
 
@@ -182,12 +198,38 @@ export default {
         this.$store.commit('setLoading', false)
       });
     },
+    destroyUser() {
+      // ログイン中ユーザーをuserに代入
+      const user = firebase.auth().currentUser
+      this.$store.commit("setLoading", true);
+      user.delete().then(() => {
+        axios
+        .delete(`/v1/users/${this.currentUser.id}`, {user})
+        .then(() => {
+          this.$store.commit("setLoading", false);
+          this.$store.commit("setFlash", {
+            status: true,
+            message: "ユーザーを削除しました"
+          });
+          setTimeout(() => {
+            this.$store.commit("setFlash", {});
+          }, 2000);
+          this.$router.push("/");
+        })
+      }).catch(function(error) {
+
+      });
+    },
     openDialogForEmail () {
       this.isEmail = true
       this.dialog = true
     },
     openDialogForPassword () {
       this.isPassword = true
+      this.dialog = true
+    },
+    openDialogForDeleteAccount () {
+      this.isDeleteAccount = true
       this.dialog = true
     }
   },
@@ -217,4 +259,10 @@ export default {
     padding-top: 16px;
     border-top: 1px dashed #B3E5FC;
   }
+
+  .user-destroy-box {
+    margin-top: 24px;
+    padding-top: 16px;
+    border-top: 1px dashed#B3E5FC;
+ }
 </style>
