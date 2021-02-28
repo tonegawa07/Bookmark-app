@@ -112,6 +112,7 @@ export default {
   },
 
   mounted() {
+    // setDefaultDataという関数を定義
     const setDafaultData = () => {
       axios
       .get(`v1/users/${this.currentUser.id}`)
@@ -233,16 +234,16 @@ export default {
       this.dialog = true
     }
   },
-
-    fetch ({ redirect, store }) {
-      store.watch(
-        state => state.currentUser,
-        (newuser, olduser) => {
-          if (!newuser) {
-            return redirect('/login')
-          }
+    // ログインしていないユーザーはリダイレクトされる
+  fetch ({ redirect, store }) {
+    store.watch(
+      state => state.currentUser,
+      (newuser, olduser) => {
+        if (!newuser) {
+          return redirect('/login')
         }
-      )
+      }
+    )
   },
 
 

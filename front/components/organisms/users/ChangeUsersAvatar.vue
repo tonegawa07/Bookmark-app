@@ -4,11 +4,21 @@
       <h3 class="edit-h3">アバター画像</h3>
       <v-row justify="center">
         <v-avatar
-          v-if="uploadImageUrl"
           size="62"
         >
         <img
+          v-if="uploadImageUrl"
           :src="uploadImageUrl"
+          alt="Avater"
+        />
+        <img
+          v-else-if="value"
+          :src="value"
+          alt="Avatar"
+        />
+        <img
+          v-else
+          src="~/assets/image/default-icon.png"
           alt="Avatar"
         />
         </v-avatar>
@@ -19,13 +29,13 @@
         accept="image/*"
         :rules="rules"
         @change="onImagePicked"
-        :disabled="ObserberProps.invalid || !ObserberProps.validated"
       />
       <v-row justify="end">
         <v-btn
           color="light-blue lighten-3"
           class="white--text"
           @click="changeUsersAvatar"
+          :disabled="ObserberProps.invalid || !ObserberProps.validated"
         >変更
         </v-btn>
       </v-row>
@@ -43,10 +53,15 @@ export default {
     FileInput
   },
 
+  // 親(profile.vueからデータを受け取る)
   props: {
     rules: {
       type: [Object, String],
       default: ''
+    },
+    // valueにはcurrentAvatarUrlが入る
+    value: {
+      type: null
     },
   },
 

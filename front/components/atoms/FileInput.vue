@@ -17,6 +17,7 @@
 
 <script>
 export default {
+  
   props: {
     rules: {
       type: [Object, String]

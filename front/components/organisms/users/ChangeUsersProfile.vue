@@ -27,7 +27,7 @@ import TextArea from '~/components/atoms/TextArea.vue'
 
 export default {
 
-    components: {
+  components: {
     TextArea,
   },
   

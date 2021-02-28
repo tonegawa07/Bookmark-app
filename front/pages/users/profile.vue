@@ -7,6 +7,7 @@
       <v-card-text>
         <v-form>
           <ChangeUsersAvatar
+            v-model="currentAvatarUrl"
             rules="size:300"
           />
           <ChangeUsersName
@@ -43,6 +44,8 @@ export default {
     return {
       name: '',
       profile: '',
+      avatar: '',
+      currentAvatarUrl: ''
     }
   },
 
@@ -53,12 +56,14 @@ export default {
   },
 
   mounted() {
+    // setDefaultDataという関数を定義
     const setDefaultData = () => {
       axios
-      .get(`v1/users/${this.currentUser.id}/edit`)
+      .get(`v1/users/${this.currentUser.id}`)
       .then((res) => {
         this.name = res.data.name
         this.profile = res.data.profile
+        this.currentAvatarUrl = res.data.avatar_url
       })
     }
     if (this.currentUser.id) {
@@ -66,6 +71,18 @@ export default {
     } else {
       setTimeout(setDefaultData, 1000)
     }
+  },
+
+      // ログインしていないユーザーはリダイレクトされる
+  fetch ({ redirect, store }) {
+    store.watch(
+      state => state.currentUser,
+      (newuser, olduser) => {
+        if (!newuser) {
+          return redirect('/login')
+        }
+      }
+    )
   },
   
 }
