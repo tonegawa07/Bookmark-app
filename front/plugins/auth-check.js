@@ -6,8 +6,10 @@ export const setUserParameter = (user, store) => {
         const { data } = await axios.get(`/v1/users?uid=${user.uid}`)
         const userParams = data
         store.commit("setUser", userParams)
+        // ログイン時にloggedInをtrueにする
         store.commit("setLoggedIn", true)
       } else {
+        // ログアウト時にはloggedInがfalseになる
         store.commit("setUser", null)
         store.commit("setLoggedIn", false)
     }
